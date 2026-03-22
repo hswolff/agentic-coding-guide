@@ -1,0 +1,119 @@
+---
+title: Repo Context
+description: The repo docs and artifacts that give agents durable project knowledge.
+---
+
+Repo context is the durable knowledge you check into a repository so an agent can understand the system without relying on chat history. It matters because most agent mistakes come from missing context, not missing intelligence.
+
+Good repo context is specific, maintained, and easy to scan. It should help an agent answer "how does this repo work?" and "what constraints matter here?" quickly.
+
+## Best practices
+
+- Check in architecture overviews for non-trivial systems
+- Maintain a glossary for domain-specific terms
+- Document high-risk areas and common failure modes
+- Keep examples of preferred patterns close to the code
+- Write short docs that answer real implementation questions
+- Link from `AGENTS.md` to the most important context docs
+- Prefer one current document over multiple competing versions
+- Update context docs when code or workflows materially change
+
+## What not to do
+
+- Do not rely on README prose alone for system context
+- Do not keep multiple architecture docs with no canonical one
+- Do not write long theory docs that nobody uses during implementation
+- Do not leave stale design notes in the main path
+- Do not dump uncurated issue notes into `docs/`
+- Do not document obvious framework behavior instead of repo-specific knowledge
+
+## Examples
+
+This is good repo context because each file answers a distinct question an agent will actually have while coding. The structure is small, current, and easy to navigate from `AGENTS.md`.
+
+Repo paths:
+- `/docs/architecture.md`
+- `/docs/glossary.md`
+- `/docs/verification.md`
+- `/docs/examples.md`
+- `/docs/checklists/bug-fix.md`
+
+```text
+docs/
+  architecture.md
+  glossary.md
+  verification.md
+  examples.md
+  checklists/
+    bug-fix.md
+```
+
+```md
+# Architecture
+
+- Main app entrypoints: `src/app.tsx`, `src/server.ts`
+- Core domains: auth, billing, reporting
+- Shared libraries: `packages/ui`, `packages/config`
+- High-risk areas: billing proration, auth session refresh
+- Common failure modes: stale cached permissions, duplicate webhook delivery
+```
+
+```md
+# Glossary
+
+- Workspace: top-level customer container
+- Seat: a billable user license
+- Report run: a generated analytics snapshot
+```
+
+This is bad repo context because it creates ambiguity and drift. An agent has to guess which document is current and which notes are safe to ignore.
+
+Repo paths:
+- `/docs/architecture.md`
+- `/docs/architecture-v2.md`
+- `/docs/ideas.md`
+- `/docs/random-notes.md`
+
+```text
+docs/
+  architecture.md
+  architecture-v2.md
+  ideas.md
+  random-notes.md
+```
+
+```md
+# Architecture
+
+This system uses modern best practices and several services.
+More documentation will be added later.
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent create the repo context on your behalf.
+
+```text
+Create or update the repository context docs for this project.
+
+Requirements:
+- Create or update `/docs/architecture.md`, `/docs/glossary.md`, and `/docs/verification.md`.
+- Add `/docs/examples.md` if the repo has strong preferred implementation patterns.
+- Keep each doc short and easy to scan.
+- Focus on repo-specific knowledge, not generic framework explanations.
+- Call out high-risk areas, common failure modes, and domain-specific terminology.
+- Avoid duplicate or competing documents that explain the same thing.
+
+Output:
+- Create or update the docs in `/docs/`
+- Use concise bullet points by default
+- Make the docs useful to both humans and coding agents
+```
+
+## References
+
+- [OpenAI Codex docs](https://developers.openai.com/codex/cloud)
+- [Claude Code overview](https://code.claude.com/docs)
+- [Cursor Rules](https://docs.cursor.com/context/rules-for-ai)
+- [GitHub Copilot custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
+- [Gemini Code Assist overview](https://developers.google.com/gemini-code-assist/docs/overview)

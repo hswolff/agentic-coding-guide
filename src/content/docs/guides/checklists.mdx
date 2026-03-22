@@ -1,0 +1,90 @@
+---
+title: Checklists
+description: Short operational checklists that help agents execute repeatable tasks safely.
+---
+
+Checklists turn common tasks into explicit steps an agent can follow without guesswork. They matter because agents are more consistent when the expected sequence of work is written down.
+
+Use checklists for risky, frequent, or review-sensitive tasks. Keep them short enough that an agent can actually follow them during execution.
+
+## Best practices
+
+- Create checklists for bug fixes, refactors, and new features first
+- Keep each checklist task-specific
+- Put verification near the end of every checklist
+- Call out when to stop and ask for confirmation
+- Write steps as actions, not principles
+- Store checklists in version control
+- Link to relevant docs or commands when needed
+- Keep each checklist short enough to scan in one pass
+
+## What not to do
+
+- Do not turn a checklist into a long handbook page
+- Do not use vague steps like "be careful" or "use judgment"
+- Do not mix unrelated workflows into one checklist
+- Do not bury required verification in notes
+- Do not create checklists nobody actually follows
+- Do not leave old steps around after the workflow changes
+
+## Examples
+
+This is a good checklist because every step is concrete, ordered, and directly useful while the agent is working. The agent knows what to do first, what to validate, and what to report.
+
+Repo path:
+- `/docs/checklists/bug-fix.md`
+
+```md
+# Bug Fix Checklist
+
+- Reproduce the issue
+- Identify the affected code path
+- Make the smallest safe change
+- Add or update a regression check
+- Run verification
+- Summarize root cause and residual risk
+```
+
+This is a bad checklist because it contains advice, not execution steps. The agent still has to invent the actual workflow.
+
+Repo path:
+- `/docs/checklists/bug-fix.md`
+
+```md
+# Bug Fix Checklist
+
+- Understand the problem deeply
+- Consider the architecture
+- Use best practices
+- Be careful not to break things
+- Test as appropriate
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent create the checklist for you.
+
+```text
+Create short operational checklists for this repository.
+
+Requirements:
+- Create `/docs/checklists/bug-fix.md`, `/docs/checklists/refactor.md`, and `/docs/checklists/feature.md`.
+- Keep each checklist focused on one workflow.
+- Use concrete action steps, not generic advice.
+- Include verification near the end of each checklist.
+- Add a final step for summarizing what changed and any residual risk.
+- Keep each checklist short enough to scan in under 30 seconds.
+
+Output:
+- Create the checklist files in `/docs/checklists/`
+- Use flat bullet points
+- Optimize for real execution by coding agents
+```
+
+## References
+
+- [Claude Code common workflows](https://code.claude.com/docs/en/common-workflows)
+- [OpenAI Codex docs](https://developers.openai.com/codex/cloud)
+- [GitHub Copilot coding agent docs](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent)
+- [Cursor Rules](https://docs.cursor.com/context/rules-for-ai)
+- [Gemini Code Assist overview](https://developers.google.com/gemini-code-assist/docs/overview)

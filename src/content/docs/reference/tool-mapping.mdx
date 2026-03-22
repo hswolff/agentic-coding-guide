@@ -1,0 +1,100 @@
+---
+title: Tool Mapping
+description: How the guide's patterns map onto major coding agents and their native features.
+---
+
+The concepts in this guide are more durable than any one tool's file format. This page matters because it helps you translate the handbook into the specific agent tools you use today without rewriting the underlying practice.
+
+Treat the repo docs as the source of truth. Use tool-native files as adapters into those docs, not as separate competing systems.
+
+## Best practices
+
+- Standardize the content before standardizing the container
+- Use plain Markdown docs as the durable source of truth
+- Add tool-native files only when they materially improve agent behavior
+- Keep vendor-specific wrappers thin
+- Link wrappers to shared repo docs instead of copying everything
+- Expect file names and capabilities to differ across tools
+
+## What not to do
+
+- Do not assume every tool supports the same instruction or skill format
+- Do not duplicate the same guidance into many vendor files by hand
+- Do not make vendor-specific wrappers the only source of truth
+- Do not force one tool's terminology onto every other tool
+- Do not overfit the repo to one product if you want portability
+
+## Examples
+
+This is a good mapping because the shared repo docs stay stable while each tool gets a thin adapter that points to the same source of truth.
+
+Repo paths:
+- `/AGENTS.md`
+- `/docs/architecture.md`
+- `/.claude/skills/bug-fix/SKILL.md`
+- `/.github/copilot-instructions.md`
+- `/.cursor/rules/`
+
+```text
+Portable source of truth:
+- /AGENTS.md
+- /docs/architecture.md
+- /docs/verification.md
+- /docs/checklists/bug-fix.md
+
+Tool adapters:
+- Claude Code: /.claude/skills/bug-fix/SKILL.md
+- GitHub Copilot: /.github/copilot-instructions.md
+- Cursor: /.cursor/rules/*
+- Generic tools: /AGENTS.md
+```
+
+This is bad mapping because every tool gets a separate full copy of the repo guidance. The instructions will drift and nobody will know which version is current.
+
+Repo paths:
+- `/CLAUDE.md`
+- `/GEMINI.md`
+- `/.cursor/rules/full-repo-rules.mdc`
+- `/.github/copilot-instructions.md`
+
+```text
+Each file contains:
+- full architecture explanation
+- full coding style guide
+- full verification policy
+- overlapping workflow instructions
+
+Result:
+- four conflicting sources of truth
+- stale docs
+- unclear agent behavior
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent map your current repo setup to specific tools.
+
+```text
+Map this repository's agent guidance to the major coding agent tools we use.
+
+Requirements:
+- Treat shared repo docs as the source of truth.
+- Identify which content should stay in portable files like `/AGENTS.md` and `/docs/*`.
+- Recommend thin tool-specific adapters for Claude Code, GitHub Copilot, Cursor, and any other obvious tools.
+- Avoid duplicating large blocks of guidance across vendor-specific files.
+- Note where a tool uses a different concept, such as rules instead of skills.
+
+Output:
+- A short mapping by tool
+- Recommended file paths for each adapter
+- Guidance on what should remain shared versus tool-specific
+```
+
+## References
+
+- [OpenAI Codex docs](https://developers.openai.com/codex/cloud)
+- [Claude Code skills](https://code.claude.com/docs/en/skills)
+- [Cursor Rules](https://docs.cursor.com/context/rules-for-ai)
+- [GitHub Copilot custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
+- [GitHub Copilot agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+- [Gemini Code Assist chat and custom commands](https://developers.google.com/gemini-code-assist/docs/chat-gemini)

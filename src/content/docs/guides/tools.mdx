@@ -1,0 +1,110 @@
+---
+title: Tools
+description: How to think about the tools an agent can call while it works.
+---
+
+Tools are the actions and information sources an agent can use while solving a task. They matter because they determine what the agent can actually do: read files, run tests, browse a site, inspect a PR, query GitHub, or call an external service.
+
+The right toolset makes an agent useful. The wrong toolset makes it either powerless or unsafe.
+
+## Best practices
+
+- Give agents the smallest toolset that can complete the job
+- Prefer tools that return concrete evidence, not just summaries
+- Expose standard local tools for search, testing, typechecking, and screenshots
+- Keep tool names and usage patterns predictable
+- Document which tools are safe to use autonomously
+- Distinguish between read tools and write tools
+- Pair powerful tools with explicit verification expectations
+- Review tool access any time a new integration is added
+
+## What not to do
+
+- Do not give every agent every tool by default
+- Do not let the tool list grow without clear ownership
+- Do not hide critical verification behind tools only one person understands
+- Do not assume more tools always means better output
+- Do not expose destructive tools casually
+- Do not leave agents guessing which tool to use for which job
+
+## Examples
+
+This is good tool design because the available actions match the real workflow. The agent can search, edit, test, and verify changes without being given broad unnecessary power.
+
+Repo paths:
+- `/AGENTS.md`
+- `/package.json`
+- `/docs/verification.md`
+
+```md
+# AGENTS.md
+
+## Tools
+
+- Use fast search tools for discovery.
+- Run the standard repo verification commands before claiming success.
+- Use screenshot or browser tools for UI changes.
+- Ask before destructive or high-risk actions.
+```
+
+```json
+{
+  "scripts": {
+    "lint": "eslint .",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  }
+}
+```
+
+This is bad tool design because the repo expects the agent to verify changes but does not expose a clear or safe tool contract. The agent has to improvise, and unsafe actions are not clearly bounded.
+
+Repo paths:
+- `/AGENTS.md`
+- `/package.json`
+
+```md
+# AGENTS.md
+
+## Tools
+
+- Use whatever tools seem appropriate.
+- Use your judgment on whether to run tests.
+```
+
+```json
+{
+  "scripts": {
+    "check": "echo \"figure it out\""
+  }
+}
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent improve the repo's tool contract.
+
+```text
+Audit and improve the tool contract for this repository.
+
+Requirements:
+- Identify the tools and commands an agent should rely on for normal work.
+- Recommend the smallest useful set of tools for search, editing, verification, and UI checks.
+- Add or update guidance so the agent knows when each tool should be used.
+- Distinguish between safe autonomous tools and risky tools that need confirmation.
+- Prefer exact repo commands over vague instructions.
+
+Output:
+- Recommended tool guidance for `/AGENTS.md`
+- Recommended script or command improvements if the current repo contract is weak
+- A short note on risk boundaries
+```
+
+## References
+
+- [OpenAI using tools](https://developers.openai.com/api/docs/guides/tools)
+- [OpenAI shell tool guide](https://developers.openai.com/api/docs/guides/tools-shell)
+- [OpenAI local shell guide](https://developers.openai.com/api/docs/guides/tools-local-shell)
+- [Claude Code overview](https://code.claude.com/docs)
+- [GitHub custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration)
+- [Gemini Code Assist tools and agent mode](https://developers.google.com/gemini-code-assist/docs/tools-agents/get-started-with-tools)

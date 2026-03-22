@@ -1,0 +1,87 @@
+---
+title: Verification Hooks
+description: The commands and checks that keep coding agents honest.
+---
+
+Verification hooks are the commands and checks an agent should run before it claims a task is done. They matter because an agent without explicit verification will often stop at "the code looks right" instead of proving the change works.
+
+Treat verification as part of the repo contract. If you want reliable agent output, make the right checks easy to discover and easy to run.
+
+## Best practices
+
+- Expose standard verification commands in the repo
+- Prefer one obvious command per check type
+- Include lint, tests, and type checks where they exist
+- Add task-specific checks for risky areas
+- Tell agents which checks are required versus optional
+- Make UI verification concrete with screenshots or visual checks
+- Document what to do when a full test suite is too expensive
+- Require agents to report what they ran and what happened
+
+## What not to do
+
+- Do not make agents guess which commands matter
+- Do not rely only on "I reviewed the code"
+- Do not hide critical checks in CI with no local equivalent
+- Do not mark broken tests as acceptable without explanation
+- Do not require huge manual validation when a script would work
+- Do not let agents skip verification silently
+
+## Examples
+
+This is a good verification section because it tells the agent exactly what to run, what is required, and how to report results. It reduces guesswork and makes failures visible earlier.
+
+Repo path: `/AGENTS.md` or `/docs/verification.md`
+
+```md
+## Verification
+
+- Required: `pnpm lint`
+- Required: `pnpm test`
+- Required: `pnpm typecheck`
+- If UI changed: capture before/after screenshots
+- If only one package changed: run targeted package tests too
+- In the final summary, list each command run and its result
+```
+
+This is a bad verification section because it replaces concrete checks with judgment calls. The agent has no clear contract and is more likely to stop before the change is actually proven.
+
+Repo path: `/AGENTS.md` or `/docs/verification.md`
+
+```md
+## Verification
+
+- Run whatever seems appropriate.
+- Use your judgment on which tests matter.
+- CI will catch anything important.
+- For UI work, visual review is optional.
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent create or update the verification guidance for you.
+
+```text
+Create or update the repository's verification guidance.
+
+Requirements:
+- Add a verification section to `/AGENTS.md` or create `/docs/verification.md` if it should live separately.
+- List the exact commands agents should run before claiming success.
+- Mark which checks are required.
+- Include special rules for UI changes, targeted package checks, or high-risk areas if relevant.
+- Tell the agent how to report the verification results in its final summary.
+- Do not use vague instructions like "run whatever seems appropriate."
+
+Output:
+- Update `/AGENTS.md` or create `/docs/verification.md`
+- Use concise bullets
+- Make the verification contract explicit and easy to follow
+```
+
+## References
+
+- [OpenAI shell tool guide](https://developers.openai.com/api/docs/guides/tools-shell)
+- [OpenAI local shell guide](https://developers.openai.com/api/docs/guides/tools-local-shell)
+- [Anthropic Claude Code overview](https://code.claude.com/docs)
+- [Google Gemini CLI docs](https://developers.google.com/gemini-code-assist/docs/gemini-cli)
+- [GitHub Copilot coding agent docs](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent)

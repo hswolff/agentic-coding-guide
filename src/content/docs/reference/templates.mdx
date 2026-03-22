@@ -1,0 +1,178 @@
+---
+title: Templates
+description: Copy-paste starter files for agent-friendly repos.
+---
+
+These templates are intentionally small. They matter because most repos benefit more from a clear minimal starting point than from an overbuilt handbook nobody maintains.
+
+Copy these as a starting point, then trim or extend based on real usage.
+
+## Best practices
+
+- Start with the smallest useful template
+- Keep each template focused on one purpose
+- Update templates when the repo workflow changes
+- Prefer links to deeper docs over repeated content
+- Remove sections you do not actively maintain
+
+## What not to do
+
+- Do not copy every template into every repo by default
+- Do not keep placeholder sections forever
+- Do not add fields nobody uses in practice
+- Do not let templates turn into policy theater
+
+## Examples
+
+This is a good starter set because every file has a clear job and very little filler. A repo like this is easy for both humans and agents to scan quickly.
+
+Repo paths:
+- `/AGENTS.md`
+- `/.claude/skills/bug-fix/SKILL.md`
+- `/.github/skills/bug-fix/SKILL.md`
+- `/docs/architecture.md`
+- `/docs/glossary.md`
+- `/docs/verification.md`
+- `/docs/checklists/bug-fix.md`
+
+```text
+repo/
+  AGENTS.md
+  .claude/
+    skills/
+      bug-fix/
+        SKILL.md
+  docs/
+    architecture.md
+    glossary.md
+    verification.md
+    checklists/
+      bug-fix.md
+```
+
+```md
+# AGENTS.md
+
+## Working rules
+
+- Keep changes small and easy to review.
+- Follow existing patterns before adding new abstractions.
+- Do not edit generated files unless the task requires it.
+
+## Verification
+
+- Run `pnpm lint`
+- Run `pnpm test`
+- Run `pnpm typecheck`
+
+## Docs
+
+- `docs/architecture.md`
+- `docs/glossary.md`
+- `docs/verification.md`
+```
+
+```md
+---
+name: bug-fix
+description: Fixes regressions and broken behavior in this repo.
+---
+
+1. Reproduce the issue.
+2. Find the smallest safe fix.
+3. Run relevant verification.
+4. Summarize the root cause and result.
+```
+
+```md
+# Architecture
+
+- Main app entrypoints:
+- Core domains:
+- Shared libraries:
+- External dependencies:
+- High-risk areas:
+- Common failure modes:
+```
+
+```md
+# Bug Fix Checklist
+
+- Reproduce the issue
+- Identify the affected code path
+- Make the smallest safe change
+- Add or update a regression check
+- Run verification
+- Summarize root cause and residual risk
+```
+
+This is a bad starter set because it creates a lot of surface area without useful instructions. It looks comprehensive, but most of it will go stale immediately.
+
+Repo paths:
+- `/AGENTS.md`
+- `/AGENT_RULES.md`
+- `/AI_NOTES.md`
+- `/CLAUDE.md`
+- `/SKILLS.md`
+- `/docs/architecture.md`
+- `/docs/architecture-v2.md`
+
+```text
+repo/
+  AGENTS.md
+  AGENT_RULES.md
+  AI_NOTES.md
+  CLAUDE.md
+  prompts/
+    general.md
+    backend.md
+    frontend.md
+    misc.md
+  docs/
+    architecture.md
+    architecture-v2.md
+    future-ideas.md
+```
+
+```md
+# AGENTS.md
+
+- Follow best practices.
+- Understand the architecture.
+- Test as needed.
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent scaffold the starter set for you.
+
+```text
+Create a minimal agent-friendly repo context starter set for this repository.
+
+Create these files:
+- `/AGENTS.md`
+- `/.claude/skills/bug-fix/SKILL.md` or `/.github/skills/bug-fix/SKILL.md`
+- `/docs/architecture.md`
+- `/docs/glossary.md`
+- `/docs/verification.md`
+- `/docs/checklists/bug-fix.md`
+
+Requirements:
+- Keep every file short and actionable.
+- Use bullet points by default.
+- Make each file serve a single purpose.
+- Include exact verification commands where relevant.
+- Avoid placeholder-heavy docs or duplicate guidance across files.
+
+Output:
+- Create the files above with sensible starter content for this repo
+- Keep the set minimal enough to maintain
+```
+
+## References
+
+- [OpenAI Codex docs](https://developers.openai.com/codex/cloud)
+- [Anthropic Claude Code quickstart](https://code.claude.com/docs/en/quickstart)
+- [Google Gemini CLI docs](https://developers.google.com/gemini-code-assist/docs/gemini-cli)
+- [Cursor Rules docs](https://docs.cursor.com/context/rules)
+- [GitHub Copilot custom agents](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-custom-agents)

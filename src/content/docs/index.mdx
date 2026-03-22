@@ -1,0 +1,136 @@
+---
+title: Agentic Coding Guide
+description: Fast best practices for making coding agents useful in real repos.
+sidebar:
+  hidden: true
+---
+
+Agents do better work when the repo contains durable operational context, not just better prompts. This guide is a fast handbook for individual developers who want the practical setup patterns a senior engineer would recommend.
+
+It focuses on what to check into a repo so agents can work with more context, more consistency, and less supervision. Skip around as needed and use the templates directly.
+
+## Best practices
+
+- Put repo-wide instructions in `AGENTS.md`
+- Keep architecture, domain terms, and constraints in versioned docs
+- Encode repeatable work as agent skills when your tool supports them
+- Give agents exact verification commands
+- Prefer examples over abstract advice
+- Use checklists for risky or repeatable tasks
+- Keep shared rules in the repo and personal preferences out of it
+- Keep context short, specific, and maintained
+- Require proof of work, not just a success claim
+- Optimize for safety before convenience
+
+## What not to do
+
+- Do not rely on chat history as the main source of repo context
+- Do not put everything you know into one giant instruction file
+- Do not make agents guess how to verify their work
+- Do not store secrets, tokens, or approval bypasses in repo guidance
+- Do not keep stale architecture notes around "just in case"
+- Do not create tool-specific files without a portable underlying concept
+- Do not treat prompting tricks as a replacement for durable repo context
+
+## Examples
+
+This is a good repo shape because each file has a clear purpose and the context is durable. An agent can find rules, workflows, verification, and domain context without digging through chat history.
+
+Repo paths:
+- `/AGENTS.md`
+- `/.claude/skills/<skill-name>/SKILL.md`
+- `/.github/skills/<skill-name>/SKILL.md`
+- `/docs/architecture.md`
+- `/docs/glossary.md`
+- `/docs/verification.md`
+- `/docs/checklists/bug-fix.md`
+- `/docs/checklists/refactor.md`
+- `/docs/checklists/feature.md`
+
+```text
+repo/
+  AGENTS.md
+  .claude/
+    skills/
+      bug-fix/
+        SKILL.md
+  docs/
+    architecture.md
+    glossary.md
+    verification.md
+    checklists/
+      bug-fix.md
+      refactor.md
+      feature.md
+  src/
+  tests/
+```
+
+This is a bad repo shape because the context is fragmented, overlapping, and likely to rot. An agent will spend time resolving conflicts instead of doing the task.
+
+Repo paths:
+- `/README-agent-notes.md`
+- `/prompts.md`
+- `/ai-rules.md`
+- `/docs/architecture-old.md`
+- `/docs/architecture-new.md`
+- `/docs/ideas.md`
+- `/docs/random-notes.md`
+
+```text
+repo/
+  README-agent-notes.md
+  prompts.md
+  ai-rules.md
+  docs/
+    architecture-old.md
+    architecture-new.md
+    ideas.md
+    random-notes.md
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent create the minimum useful repo context on your behalf.
+
+```text
+Create a minimal, maintainable agent-friendly repo context for this repository.
+
+Create or update:
+- `/AGENTS.md`
+- `/.claude/skills/<skill-name>/SKILL.md` or `/.github/skills/<skill-name>/SKILL.md`
+- `/docs/architecture.md`
+- `/docs/glossary.md`
+- `/docs/verification.md`
+- `/docs/checklists/bug-fix.md`
+- `/docs/checklists/refactor.md`
+- `/docs/checklists/feature.md`
+
+Requirements:
+- Keep every file short and easy to scan.
+- Use bullet points by default.
+- Give each file a clear purpose with minimal overlap.
+- Include exact verification commands and safety guidance where relevant.
+- Avoid redundant, stale, or placeholder-heavy docs.
+
+Output:
+- Create the files with starter content tailored to this repo
+- Keep the structure simple enough for a solo developer to maintain
+```
+
+## References
+
+- [OpenAI Codex docs](https://developers.openai.com/codex/cloud)
+- [Anthropic Claude Code overview](https://code.claude.com/docs)
+- [Claude Code skills](https://code.claude.com/docs/en/skills)
+- [Google Gemini CLI docs](https://developers.google.com/gemini-code-assist/docs/gemini-cli)
+- [Cursor Rules docs](https://docs.cursor.com/context/rules)
+- [GitHub Copilot custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
+- [GitHub Copilot agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+
+## Read next
+
+- [AGENTS.md](/guides/agents-md/)
+- [SKILLS.md](/guides/skills-md/)
+- [Verification Hooks](/guides/verification-hooks/)
+- [Templates](/reference/templates/)

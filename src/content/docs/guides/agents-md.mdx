@@ -1,0 +1,117 @@
+---
+title: AGENTS.md
+description: Repo-level instructions that tell coding agents how to work in this codebase.
+---
+
+`AGENTS.md` is the repo-level instruction file for a coding agent. It matters because it turns tribal knowledge into durable rules the agent can apply every time it touches the codebase.
+
+Use the recognizable file name in the repo, but think of it as the home for stable operating instructions. It should explain how to work here, not everything about the product.
+
+## Best practices
+
+- Put `AGENTS.md` at the repo root
+- Keep it short enough to reread quickly
+- State coding, testing, and review expectations explicitly
+- Include exact verification commands
+- Document important safety rules for risky actions
+- Link to deeper docs instead of duplicating them
+- Prefer repo-specific rules over generic coding advice
+- Update it whenever the team's working norms change
+- Write rules as direct instructions, not long explanations
+
+## What not to do
+
+- Do not turn `AGENTS.md` into a full architecture handbook
+- Do not include broad advice that applies to every repo
+- Do not bury critical rules in long prose
+- Do not list commands the repo no longer supports
+- Do not include secrets, tokens, or machine-local paths
+- Do not mix personal preferences with team-wide guidance
+- Do not create multiple root instruction files that overlap
+
+## Examples
+
+This is a good `AGENTS.md` because it is short, direct, and operational. It tells the agent how to work in this repo, how to verify changes, and where to look for more context.
+
+Repo path: `/AGENTS.md`
+
+```md
+# AGENTS.md
+
+## Purpose
+
+- This file tells coding agents how to work in this repo.
+
+## Working rules
+
+- Keep changes small and task-focused.
+- Follow existing patterns before introducing new abstractions.
+- Do not edit generated files unless the task requires it.
+
+## Verification
+
+- Run `pnpm lint`
+- Run `pnpm test`
+- Run `pnpm typecheck`
+
+## Safety rules
+
+- Ask before destructive actions.
+- Do not commit secrets or environment values.
+- If a task touches billing logic, read `docs/billing.md` first.
+
+## Key docs
+
+- Architecture: `docs/architecture.md`
+- Glossary: `docs/glossary.md`
+- Checklists: `docs/checklists/`
+```
+
+This is a bad `AGENTS.md` because it is vague, bloated, and hard to act on. It gives the agent principles without decisions, and it repeats information that belongs elsewhere.
+
+Repo path: `/AGENTS.md`
+
+```md
+# AGENTS.md
+
+Please write clean, scalable, maintainable code and think carefully.
+
+Use best practices at all times.
+
+Understand the full architecture before making changes.
+
+Always consider performance, readability, testing, security,
+developer experience, documentation, and long-term maintainability.
+
+Refer to the README, wiki, old issues, pull requests, and team knowledge
+to understand how things work.
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent create or update the file for you.
+
+```text
+Create or update `/AGENTS.md` for this repository.
+
+Requirements:
+- Keep it short and easy to scan.
+- Include only repo-specific working rules.
+- Add exact verification commands the agent should run before claiming success.
+- Add safety rules for destructive actions, secrets, and high-risk code areas.
+- Link to other repo docs instead of duplicating them.
+- Do not include generic advice like "use best practices" or "write clean code."
+
+Output:
+- Create the file at `/AGENTS.md`
+- Use concise bullet points
+- Make it actionable enough that an agent could follow it without extra chat context
+```
+
+## References
+
+- [OpenAI Codex docs](https://developers.openai.com/codex/cloud)
+- [Anthropic Claude Code overview](https://code.claude.com/docs)
+- [Google Gemini CLI docs](https://developers.google.com/gemini-code-assist/docs/gemini-cli)
+- [Cursor Rules docs](https://docs.cursor.com/context/rules)
+- [GitHub Copilot custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)

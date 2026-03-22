@@ -1,0 +1,115 @@
+---
+title: Subagents
+description: When to split work across specialized agents instead of using one general-purpose agent thread.
+---
+
+Subagents are specialized agent workers used for narrower tasks within a larger job. They matter because they let you split work by concern, such as exploration, implementation, verification, or research, instead of forcing one thread to juggle every subtask at once.
+
+Use subagents when the work is parallelizable or when specialization clearly reduces confusion. Do not use them as a reflex for every task.
+
+## Best practices
+
+- Use subagents for bounded, well-scoped subtasks
+- Keep ownership clear for each subagent
+- Split by responsibility, not by arbitrary file count
+- Use subagents when work can proceed in parallel
+- Keep the main thread responsible for overall integration
+- Have subagents return concrete outputs, not vague analysis
+- Use a specialist subagent for verification when it can run independently
+- Close the loop by integrating and reviewing subagent output explicitly
+
+## What not to do
+
+- Do not spawn subagents for the immediate blocking task unless parallelism helps
+- Do not give multiple subagents overlapping write ownership
+- Do not use subagents for simple tasks that one thread can finish faster
+- Do not let subagents become unbounded research rabbits holes
+- Do not delegate critical integration thinking away from the main thread
+- Do not spawn many agents without a clear merge plan
+
+## Examples
+
+This is good subagent usage because each worker has a narrow job, a clear boundary, and a useful deliverable. The main thread stays responsible for final integration.
+
+Repo paths:
+- `/AGENTS.md`
+- `/docs/checklists/refactor.md`
+
+```md
+# AGENTS.md
+
+## Subagents
+
+- Use subagents only for bounded subtasks.
+- Keep file ownership clear when multiple agents edit code.
+- Use one subagent for implementation and one for verification only when the work can proceed in parallel.
+- The main thread owns final integration and the user-facing summary.
+```
+
+```text
+Main thread:
+- defines the plan
+- keeps ownership of integration
+
+Subagent 1:
+- updates `/src/auth/*`
+- returns changed files and test results
+
+Subagent 2:
+- verifies `/src/auth/*` behavior
+- returns findings only
+```
+
+This is bad subagent usage because work is duplicated and the ownership model is unclear. The agents are likely to step on each other or return redundant results.
+
+Repo paths:
+- `/AGENTS.md`
+
+```md
+# AGENTS.md
+
+## Subagents
+
+- Spawn subagents whenever a task looks large.
+- Multiple subagents can edit the same area if needed.
+- Ask several agents the same question to compare answers.
+```
+
+```text
+Subagent 1:
+- edits auth
+
+Subagent 2:
+- also edits auth
+
+Subagent 3:
+- explores auth again
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent design a subagent strategy for a repo or task.
+
+```text
+Design a safe subagent strategy for this task or repository.
+
+Requirements:
+- Identify whether subagents are actually helpful here.
+- Only split work when the subtasks are bounded and meaningfully parallelizable.
+- Define clear ownership for each subagent.
+- Keep the main thread responsible for integration and final review.
+- Avoid overlapping write scopes unless there is a strong reason.
+
+Output:
+- A short subagent plan
+- The role of the main thread
+- The ownership boundary and expected deliverable for each subagent
+- A note on risks or why subagents should be avoided if they are unnecessary
+```
+
+## References
+
+- [Claude Code subagents](https://code.claude.com/docs/en/sub-agents)
+- [OpenAI build agents overview](https://developers.openai.com/api/docs/agents)
+- [GitHub custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration)
+- [Gemini Code Assist agent mode overview](https://developers.google.com/gemini-code-assist/docs/tools-agents/get-started-with-tools)

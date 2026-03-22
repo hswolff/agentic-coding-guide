@@ -1,0 +1,120 @@
+---
+title: MCP
+description: How to use the Model Context Protocol to give agents access to external tools and context safely.
+---
+
+MCP, or Model Context Protocol, is a standard way to connect agents to external tools and data sources. It matters because it lets an agent go beyond the repo and use systems like GitHub, browsers, internal APIs, or documentation servers without hard-coding every integration into the model itself.
+
+Treat MCP as an extension layer, not a substitute for repo context. The repo should still explain how your system works; MCP should help the agent fetch live context or take actions that plain files cannot provide.
+
+## Best practices
+
+- Use MCP when the agent needs live external context or actions
+- Prefer a small set of trusted MCP servers over a long list of marginal ones
+- Enable only the tools the agent actually needs
+- Document what each MCP server is for
+- Treat write-capable MCP servers as high-risk
+- Keep repo docs as the source of truth and use MCP to augment them
+- Add MCP only when it reduces real friction
+- Review tool permissions before enabling autonomous use
+
+## What not to do
+
+- Do not use MCP to paper over missing repo documentation
+- Do not enable broad third-party MCP access without review
+- Do not expose write tools when read-only tools are enough
+- Do not assume every agent supports MCP the same way
+- Do not configure many overlapping servers that provide similar tools
+- Do not let agents use sensitive integrations without a clear approval model
+
+## Examples
+
+This is good MCP usage because each server has a clear purpose and the available tools are narrow. The agent gets live context where needed, but the repo still owns its core guidance.
+
+Repo paths:
+- `/AGENTS.md`
+- `/.mcp.json`
+- `/.github/copilot-instructions.md`
+
+```json
+{
+  "servers": {
+    "github": {
+      "description": "Read repository issues and pull requests",
+      "tools": ["repos", "issues", "pull_requests"]
+    },
+    "playwright": {
+      "description": "Inspect and test local UI changes",
+      "tools": ["navigate", "screenshot", "click"]
+    }
+  }
+}
+```
+
+```md
+# AGENTS.md
+
+## External tools
+
+- Use MCP only when repo files are not enough.
+- Prefer read-only MCP tools unless the task explicitly requires writes.
+- If a task changes UI behavior, use browser tooling or screenshots to verify it.
+```
+
+This is bad MCP usage because the configuration is broad, poorly explained, and risky. The agent has too much power and nobody reading the repo can tell why the integrations are there.
+
+Repo paths:
+- `/.mcp.json`
+- `/AGENTS.md`
+
+```json
+{
+  "servers": {
+    "everything": {
+      "tools": ["*"]
+    },
+    "random-third-party-server": {
+      "tools": ["*"]
+    }
+  }
+}
+```
+
+```md
+# AGENTS.md
+
+## External tools
+
+- Use MCP whenever it seems useful.
+- Most tools are enabled already.
+```
+
+## Agent Prompt
+
+Use this prompt to have an agent add MCP guidance or configuration for you.
+
+```text
+Design a minimal MCP setup for this repository.
+
+Requirements:
+- Identify whether this repo actually needs MCP.
+- If it does, recommend a small set of MCP servers with clear purposes.
+- Prefer read-only tools unless write access is necessary.
+- Explain what each MCP server is for and which tools should be enabled.
+- Add or update repo guidance so the agent knows when MCP should be used.
+- Avoid broad wildcard access or overlapping servers.
+
+Output:
+- A short recommended MCP configuration
+- Any related repo guidance updates, such as `/AGENTS.md`
+- A note on risks, approvals, and tool scope
+```
+
+## References
+
+- [OpenAI tools and connectors](https://developers.openai.com/api/docs/models)
+- [Claude Code MCP](https://code.claude.com/docs/en/mcp)
+- [GitHub Copilot coding agent and MCP](https://docs.github.com/en/copilot/concepts/coding-agent/mcp-and-coding-agent)
+- [GitHub MCP server toolsets](https://docs.github.com/copilot/how-tos/provide-context/use-mcp/configure-toolsets)
+- [Gemini Code Assist agent mode overview](https://developers.google.com/gemini-code-assist/docs/tools-agents/get-started-with-tools)
+- [Gemini Code Assist agent mode and MCP setup](https://developers.google.com/gemini-code-assist/docs/use-agentic-chat-pair-programmer)
